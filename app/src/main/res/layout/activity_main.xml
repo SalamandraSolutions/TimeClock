@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!--This LinearLayout represents the contents of the screen -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <!--The ActionBar displayed at the top -->
+        <include
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--The main content view where fragments are Loaded -->
+        <FrameLayout
+            android:id="@+id/flContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                style="@style/Animation.AppCompat.Dialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="10dp">
+
+
+
+
+                <com.getbase.floatingactionbutton.FloatingActionsMenu
+                    android:id="@+id/multiple_actions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:fab_addButtonColorNormal="@color/white"
+                    fab:fab_addButtonColorPressed="@color/white_pressed"
+                    fab:fab_addButtonPlusIconColor="@color/half_black"
+                    fab:fab_labelStyle="@style/menu_labels_style"
+                    android:layout_marginRight="0dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true">
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/action_a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_colorNormal="@color/white"
+                        fab:fab_title="Create a company"
+                        android:src="@drawable/company_icon"
+                        android:paddingTop="5dp"
+                        fab:fab_colorPressed="@color/white_pressed"/>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/action_b"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_colorNormal="@color/white"
+                        fab:fab_title="Add an employee"
+                        android:src="@drawable/account_circle"
+                        android:paddingTop="5dp"
+                        fab:fab_colorPressed="@color/white_pressed"/>
+
+                </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+            </RelativeLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nvView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/drawer_view"
+        app:headerLayout="@layout/nav_header" />
+
+</android.support.v4.widget.DrawerLayout>

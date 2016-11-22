@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_barcode_scanner"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical"
+    tools:context="za.co.salamandra.timeclock.barcode_scanner"
+    tools:showIn="@layout/activity_barcode_scanner">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/devices">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_weight="0.5"
+            android:id="@+id/personProfile"
+            android:src="@drawable/account_circle"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:id="@+id/secondary_top_panel">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/personName"
+                android:textSize="20sp"
+                android:layout_marginTop="16dp"
+                android:text="@string/first_name_default_text"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/employeeCellNume"
+                android:textSize="20sp"
+                android:layout_marginTop="16dp"
+                android:text="Employee Cell"
+                android:layout_below="@+id/personName"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/employeeID"
+                android:textSize="20sp"
+                android:layout_marginTop="16dp"
+                android:text="Test"
+                android:layout_below="@+id/employeeCellNume"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

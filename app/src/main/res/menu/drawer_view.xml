@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_main_page"
+            android:icon="@drawable/fingerprint"
+            android:title="Home Page"
+            android:checked="true" />
+        <item
+            android:id="@+id/nav_scan_code"
+            android:icon="@drawable/camera_enhance"
+            android:title="Scan a Code" />
+
+        <item
+            android:id="@+id/nav_create_code"
+            android:icon="@drawable/scan_code"
+            android:title="Create a code" />
+
+        <item
+            android:id="@+id/nav_add_employee"
+            android:icon="@drawable/account_circle"
+            android:title="Add an Employee" />
+    </group>
+</menu>
