@@ -11,7 +11,11 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.TimeZone;
 
 import za.co.salamandra.timeclock.LoginActivity;
 
@@ -138,5 +142,125 @@ public class postRequest {
             return false;
         }
         return false;
+    }
+
+    public boolean postTimeClockStart() {
+        URL url;
+        HttpURLConnection conn;
+        String api_key = LoginActivity.preferences.getString("apikey", null);
+        try {
+            //create connection string
+            url = new URL("http://api.salamandra.co.za/v1/timeIn");
+            Long time = (Long) (System.currentTimeMillis());
+            //set the parameters
+            String param = "time=" + getDateCurrentTimeZone(time);
+            //begin the connection
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+
+            conn.setFixedLengthStreamingMode(param.getBytes().length);
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("api", api_key);
+
+            //push params
+            PrintWriter out = new PrintWriter(conn.getOutputStream());
+            out.print(param);
+            out.close();
+            //build response
+            String response = "";
+            Scanner inStream = new Scanner(conn.getInputStream());
+            //process and store response
+            while (inStream.hasNextLine()) {
+                response += (inStream.nextLine());
+            }
+            //Convert to JSON
+            JSONObject JSONtime = new JSONObject(response);
+            //getStrings
+            boolean error = JSONtime.getBoolean("error");
+            String message = JSONtime.getString("message");
+            //check response
+            if (!error) {
+                return true;
+            }
+
+        } catch (MalformedURLException mal) {
+            mal.printStackTrace();
+            return false;
+        } catch (IOException io) {
+            io.printStackTrace();
+            return false;
+        }catch (Exception err) {
+            err.printStackTrace();
+            return false;
+        }
+        return false;
+
+    }
+
+    public boolean postTimeClockEnd() {
+        URL url;
+        HttpURLConnection conn;
+        String api_key = LoginActivity.preferences.getString("apikey", null);
+        try {
+            //create connection string
+            url = new URL("http://api.salamandra.co.za/v1/timeOut");
+            Long time = (Long) (System.currentTimeMillis());
+            //set the parameters
+            String param = "time=" + getDateCurrentTimeZone(time);
+            //begin the connection
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+
+            conn.setFixedLengthStreamingMode(param.getBytes().length);
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("api", api_key);
+
+            //push params
+            PrintWriter out = new PrintWriter(conn.getOutputStream());
+            out.print(param);
+            out.close();
+            //build response
+            String response = "";
+            Scanner inStream = new Scanner(conn.getInputStream());
+            //process and store response
+            while (inStream.hasNextLine()) {
+                response += (inStream.nextLine());
+            }
+            //Convert to JSON
+            JSONObject JSONtime = new JSONObject(response);
+            //get strings
+            boolean error = JSONtime.getBoolean("error");
+            String message = JSONtime.getString("message");
+            //check response
+            if (!error) {
+                return true;
+            }
+        } catch (MalformedURLException mal) {
+            mal.printStackTrace();
+            return false;
+        } catch (IOException io) {
+            io.printStackTrace();
+            return false;
+        } catch (Exception err) {
+            err.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public  String getDateCurrentTimeZone(long timestamp) {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            TimeZone tz = TimeZone.getDefault();
+            calendar.setTimeInMillis(timestamp * 1000);
+            calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date currenTimeZone = (Date) calendar.getTime();
+            return sdf.format(currenTimeZone);
+        }catch (Exception e) {
+        }
+        return "";
     }
 }
