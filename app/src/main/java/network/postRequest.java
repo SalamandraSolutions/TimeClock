@@ -1,11 +1,18 @@
 package network;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import org.json.JSONObject;
+import org.jibble.simpleftp.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
@@ -90,7 +97,45 @@ public class postRequest {
         return false;
     }
 
-    public boolean postEmployee (String image, String firstName, String lastName, String empCellNum, String empEmailAddress, String empID) {
+    public boolean postEmployee (Bitmap image, String firstName, String lastName, String empCellNum, String empEmailAddress, String empID) {
+        String imagePath = firstName + "_" + lastName + "-" + empID + ".jpg";
+        //send picture
+        try {
+            SimpleFTP ftp = new SimpleFTP();
+
+            //Connect to server on port 21
+            ftp.connect("197.81.192.113", 21, "root", "gr1Mc0_1");
+            //set binary mode
+            ftp.bin();
+
+            //change to a new working directory on the ftp server
+            ftp.cwd("/var/www/images");
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            //get files
+            File f = new File(path, "/" + imagePath);
+            f.createNewFile();
+
+            //convert bitmap to byte array
+            Bitmap bitmap = image;
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+            //write
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+            //Upload some file
+            ftp.stor(f);
+            //close
+            ftp.disconnect();
+
+        } catch (Exception err) {
+            err.printStackTrace();
+
+        }
+
         URL url;
         HttpURLConnection conn;
         String api_key = LoginActivity.preferences.getString("apikey", null);
@@ -100,7 +145,7 @@ public class postRequest {
             //set the parameters
             String param = "first_name=" + firstName + "&last_name=" +
                     lastName + "&cell_num=" + empCellNum + "&email_address=" +
-                    empEmailAddress + "&photo=" + image + "&barcode=" + empID;
+                    empEmailAddress + "&photo=" + imagePath + "&barcode=" + empID;
             //begin the connection
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);

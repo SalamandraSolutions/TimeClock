@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -42,11 +43,15 @@ public class addEmployee extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private addEmployeeNet mTask = null;
+
     private ImageView profileImage;
     private EditText firstName, lastName, empCellNum, empEmailAddress, empID;
     private Button btnCreate;
 
     private String image_file;
+
+    private String first_name, last_name, cell_num, email_address, id;
 
     private View v;
 
@@ -128,27 +133,33 @@ public class addEmployee extends Fragment {
          btnCreate.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 network.postRequest postRequest = new postRequest();
-                 Toast.makeText(getContext(), "Adding employee, please wait...", Toast.LENGTH_SHORT).show();
-                 boolean bResponse = postRequest.postEmployee(convertImage(), firstName.getText().toString(), lastName.getText().toString(),
-                         empCellNum.getText().toString(), empEmailAddress.getText().toString(), empID.getText().toString());
-                 if(bResponse) {
-                     Toast.makeText(getContext(), "Employee has been added successfully!", Toast.LENGTH_LONG).show();
-                     //reset form
-                     profileImage.setImageResource(R.drawable.account_circle);
-                     firstName.setText("");
-                     lastName.setText("");
-                     empEmailAddress.setText("");
-                     empCellNum.setText("");
-                     empID.setText("");
-                 } else {
-                     Toast.makeText(getContext(), "FAILED: Creating a new Employee", Toast.LENGTH_LONG).show();
-                 }
 
+                 first_name = firstName.getText().toString();
+                 last_name = lastName.getText().toString();
+                 cell_num = empCellNum.getText().toString();
+                 email_address = empEmailAddress.getText().toString();
+                 id = empID.getText().toString();
+                 Toast.makeText(getContext(), "Adding employee, please wait...", Toast.LENGTH_SHORT).show();
+                 mTask = new addEmployeeNet();
+                 mTask.execute((Void) null);
              }
          });
 
         return v;
+    }
+
+    public void successClear() {
+        Toast.makeText(getContext(), "Employee has been added successfully!", Toast.LENGTH_LONG).show();
+        profileImage.setImageResource(R.drawable.account_circle);
+        firstName.setText("");
+        lastName.setText("");
+        empEmailAddress.setText("");
+        empCellNum.setText("");
+        empID.setText("");
+    }
+
+    public void failShow() {
+        Toast.makeText(getContext(), "FAILURE: Unable to create employee!", Toast.LENGTH_LONG).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -177,6 +188,7 @@ public class addEmployee extends Fragment {
             }
         }
     }
+
 
     private void performCrop(Intent data) {
         //take care for exceptions
@@ -217,12 +229,12 @@ public class addEmployee extends Fragment {
         mListener = null;
     }
 
-    public String convertImage() {
+    public Bitmap convertImage() {
         Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b,Base64.DEFAULT);
+        //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        //byte[] b = baos.toByteArray();
+        return bitmap;
     }
 
     /**
@@ -250,6 +262,27 @@ public class addEmployee extends Fragment {
         this.image_file = file;
     }
 
+    public class addEmployeeNet extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            network.postRequest pr = new network.postRequest();
+            boolean response = pr.postEmployee(convertImage(), first_name, last_name, cell_num, email_address, id);
+            if(response) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success) {
+                successClear();
+            } else {
+                failShow();
+            }
+        }
+    }
 
 
 }

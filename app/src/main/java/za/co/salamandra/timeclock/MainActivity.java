@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
+
+    private TextView txtName, txtEmail;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -59,7 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle("Salamandra Time Clock");
 
+        txtName = (TextView) findViewById(R.id.nav_person_name);
+        txtEmail = (TextView) findViewById(R.id.nav_person_email);
 
+        //txtName.setText("Paul Murdoch" /*LoginActivity.preferences.getString("name", null)*/);
+        //txtEmail.setText("paulgmurdoch@gmail.com" /*LoginActivity.preferences.getString("email", null)*/);
 
 
 
